@@ -42,6 +42,7 @@ export class MenuItem extends React.Component {
 
   constructor(props) {
     super(props);
+    this.ref = React.createRef();
   }
 
   componentDidMount() {
@@ -51,7 +52,7 @@ export class MenuItem extends React.Component {
 
   componentDidUpdate() {
     if (this.props.active) {
-      scrollIntoView(ReactDOM.findDOMNode(this), ReactDOM.findDOMNode(this.props.parentMenu), {
+      scrollIntoView(this.ref.current, ReactDOM.findDOMNode(this.props.parentMenu), {
         onlyScrollIfNeeded: true,
       });
     }
@@ -192,6 +193,7 @@ export class MenuItem extends React.Component {
         {...props}
         {...attrs}
         {...mouseEvent}
+        ref={this.ref}
         style={style}
       >
         {props.children}

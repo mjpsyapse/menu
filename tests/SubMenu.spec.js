@@ -324,7 +324,7 @@ describe('SubMenu', () => {
   });
 
   describe('horizontal menu', () => {
-    it('should automatically adjust width', () => {
+    it.only('should automatically adjust width', () => {
       const props = {
         mode: 'horizontal',
         openKeys: ['s1'],

@@ -105,7 +105,7 @@ export class SubPopupMenu extends React.Component {
     mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
     triggerSubMenuAction: PropTypes.oneOf(['click', 'hover']),
     inlineIndent: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    manualRef: PropTypes.func,
+    manualRef: PropTypes.any,
     itemIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
     expandIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   };
@@ -119,12 +119,12 @@ export class SubPopupMenu extends React.Component {
     visible: true,
     focusable: true,
     style: {},
-    manualRef: noop,
+    manualRef: React.createRef(),
   };
 
   constructor(props) {
     super(props);
-
+    this.ref = props.manualRef || React.createRef();
     props.store.setState({
       activeKey: {
         ...props.store.getState().activeKey,
@@ -133,13 +133,6 @@ export class SubPopupMenu extends React.Component {
     });
 
     this.instanceArray = [];
-  }
-
-  componentDidMount() {
-    // invoke customized ref to expose component to mixin
-    if (this.props.manualRef) {
-      this.props.manualRef(this);
-    }
   }
 
   shouldComponentUpdate(nextProps) {
@@ -359,6 +352,7 @@ export class SubPopupMenu extends React.Component {
     return (
       <DOMWrap
         {...props}
+        ref={this.ref}
         prefixCls={prefixCls}
         mode={mode}
         tag="ul"

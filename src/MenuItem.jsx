@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import KeyCode from 'rc-util/lib/KeyCode';
 import classNames from 'classnames';
@@ -52,7 +51,7 @@ export class MenuItem extends React.Component {
 
   componentDidUpdate() {
     if (this.props.active) {
-      scrollIntoView(this.ref.current, ReactDOM.findDOMNode(this.props.parentMenu), {
+      scrollIntoView(this.ref.current, this.ref.current.parentNode, {
         onlyScrollIfNeeded: true,
       });
     }

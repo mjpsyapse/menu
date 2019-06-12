@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { connect } from 'mini-store';
 import SubPopupMenu from './SubPopupMenu';
 import placements from './placements';
-import Animate from 'rc-animate';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {
   noop,
   loopMenuItemRecursively,
@@ -399,11 +399,13 @@ export class SubMenu extends React.Component {
     }
 
     return (
-      <Animate
+      <ReactCSSTransitionGroup
         {...animProps}
-        showProp="visible"
-        component=""
+        transitionName="enter"
         transitionAppear={transitionAppear}
+        transitionAppearTimeout={200}
+        transitionEnterTimeout={200}
+        transitionLeaveTimeout={200}
       >
         <SubPopupMenu
           ref={this.subPopupMenuRef}
@@ -412,7 +414,7 @@ export class SubMenu extends React.Component {
         >
           {children}
         </SubPopupMenu>
-      </Animate>
+      </ReactCSSTransitionGroup>
     );
   }
 

@@ -1,13 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@mjpsyapse/rc-trigger';
 import KeyCode from 'rc-util/lib/KeyCode';
 import classNames from 'classnames';
 import { connect } from 'mini-store';
 import SubPopupMenu from './SubPopupMenu';
 import placements from './placements';
-import Animate from 'rc-animate';
+import { CSSTransition } from 'react-transition-group';
 import {
   noop,
   loopMenuItemRecursively,
@@ -83,6 +82,8 @@ export class SubMenu extends React.Component {
     const store = props.store;
     const eventKey = props.eventKey;
     const defaultActiveFirst = store.getState().defaultActiveFirst;
+    this.menuRef = React.createRef();
+    this.subPopupMenuRef = React.createRef();
 
     this.isRootMenu = false;
 
@@ -137,7 +138,10 @@ export class SubMenu extends React.Component {
 
   onKeyDown = (e) => {
     const keyCode = e.keyCode;
-    const menu = this.menuInstance;
+    const menu = (
+        this.subPopupMenuRef.current &&
+        this.subPopupMenuRef.current.wrappedInstance
+      ) || this.menuRef.current;
     const {
       isOpen,
       store,
@@ -282,11 +286,6 @@ export class SubMenu extends React.Component {
     return `${this.props.rootPrefixCls}-submenu-open`;
   };
 
-  saveMenuInstance = (c) => {
-    // children menu instance
-    this.menuInstance = c;
-  };
-
   addKeyPath = (info) => {
     return {
       ...info,
@@ -326,16 +325,17 @@ export class SubMenu extends React.Component {
 
   adjustWidth = () => {
     /* istanbul ignore if */
-    if (!this.subMenuTitle || !this.menuInstance) {
+    if (!this.subMenuTitle || !this.menuRef.current) {
       return;
     }
-    const popupMenu = ReactDOM.findDOMNode(this.menuInstance);
+
+    const popupMenu = this.subPopupMenuRef.current.wrappedInstance.ref.current;
     if (popupMenu.offsetWidth >= this.subMenuTitle.offsetWidth) {
       return;
     }
 
     /* istanbul ignore next */
-    popupMenu.style.minWidth = `${this.subMenuTitle.offsetWidth}px`;
+    popupMenu.self.current.style.minWidth = `${this.subMenuTitle.offsetWidth}px`;
   };
 
   saveSubMenuTitle = (subMenuTitle) => {
@@ -371,7 +371,6 @@ export class SubMenu extends React.Component {
       multiple: props.multiple,
       prefixCls: props.rootPrefixCls,
       id: this._menuId,
-      manualRef: this.saveMenuInstance,
       itemIcon: props.itemIcon,
       expandIcon: props.expandIcon,
     };
@@ -394,7 +393,7 @@ export class SubMenu extends React.Component {
     const animProps = {};
 
     if (baseProps.openTransitionName) {
-      animProps.transitionName = baseProps.openTransitionName;
+      animProps.transitionname = baseProps.openTransitionName;
     } else if (typeof baseProps.openAnimation === 'object') {
       animProps.animation = { ...baseProps.openAnimation };
       if (!transitionAppear) {
@@ -403,14 +402,22 @@ export class SubMenu extends React.Component {
     }
 
     return (
-      <Animate
+      <CSSTransition
         {...animProps}
-        showProp="visible"
-        component=""
-        transitionAppear={transitionAppear}
+        transitionappear={transitionAppear}
+        transitionappeartimeout={200}
+        transitionentertimeout={200}
+        transitionleavetimeout={200}
+        timeout={200}
       >
-        <SubPopupMenu {...baseProps} id={this._menuId}>{children}</SubPopupMenu>
-      </Animate>
+        <SubPopupMenu
+          ref={this.subPopupMenuRef}
+          {...baseProps}
+          id={this._menuId}
+        >
+          {children}
+        </SubPopupMenu>
+      </CSSTransition>
     );
   }
 
@@ -520,6 +527,7 @@ export class SubMenu extends React.Component {
       <li
         {...props}
         {...mouseEvents}
+        ref={this.menuRef}
         className={className}
         role="menuitem"
       >

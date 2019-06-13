@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import ResizeObserver from 'resize-observer-polyfill';
 import SubMenu from './SubMenu';
@@ -20,6 +19,12 @@ if (canUseDOM) {
 }
 
 class DOMWrap extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.self = React.createRef();
+  }
+
   state = {
     lastVisibleIndex: undefined,
   };
@@ -27,7 +32,7 @@ class DOMWrap extends React.Component {
   componentDidMount() {
     this.setChildrenWidthAndResize();
     if (this.props.level === 1 && this.props.mode === 'horizontal') {
-      const menuUl = ReactDOM.findDOMNode(this);
+      const menuUl = this.self.current;
       if (!menuUl) {
         return;
       }
@@ -67,7 +72,7 @@ class DOMWrap extends React.Component {
   // get all valid menuItem nodes
   getMenuItemNodes = () => {
     const { prefixCls } = this.props;
-    const ul = ReactDOM.findDOMNode(this);
+    const ul = this.self.current;
     if (!ul) {
       return [];
     }
@@ -138,7 +143,7 @@ class DOMWrap extends React.Component {
     if (this.props.mode !== 'horizontal') {
       return;
     }
-    const ul = ReactDOM.findDOMNode(this);
+    const ul = this.self.current;
 
     if (!ul) {
       return;
@@ -196,7 +201,7 @@ class DOMWrap extends React.Component {
       return;
     }
 
-    const ul = ReactDOM.findDOMNode(this);
+    const ul = this.self.current;
     if (!ul) {
       return;
     }
@@ -295,7 +300,7 @@ class DOMWrap extends React.Component {
     }
 
     return (
-      <Tag {...rest}>
+      <Tag {...rest} ref={this.self}>
         {this.renderChildren(this.props.children)}
       </Tag>
     );

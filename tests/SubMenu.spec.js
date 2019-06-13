@@ -324,7 +324,7 @@ describe('SubMenu', () => {
   });
 
   describe('horizontal menu', () => {
-    it.only('should automatically adjust width', () => {
+    it('should automatically adjust width', () => {
       const props = {
         mode: 'horizontal',
         openKeys: ['s1'],
@@ -364,7 +364,7 @@ describe('SubMenu', () => {
       title.simulate('click');
       jest.runAllTimers();
 
-      expect(wrapper.find('Animate').prop('transitionName')).toEqual('fade');
+      expect(wrapper.find('CSSTransition').prop('transitionname')).toEqual('fade');
     });
 
     it('should not animate on initially opened menu', () => {
@@ -374,7 +374,7 @@ describe('SubMenu', () => {
         openKeys: ['s1'],
       }));
 
-      expect(wrapper.find('Animate').first().prop('animation')).toEqual({});
+      expect(wrapper.find('CSSTransition').first().prop('animation')).toEqual({});
     });
 
     it('should animate with config', () => {
@@ -388,7 +388,7 @@ describe('SubMenu', () => {
       title.simulate('click');
       jest.runAllTimers();
 
-      expect(wrapper.find('Animate').first().prop('animation')).toEqual({ appear });
+      expect(wrapper.find('CSSTransition').first().prop('animation')).toEqual({ appear });
     });
   });
 

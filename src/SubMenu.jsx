@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Trigger from 'rc-trigger';
+import Trigger from '@mjpsyapse/rc-trigger';
 import KeyCode from 'rc-util/lib/KeyCode';
 import classNames from 'classnames';
 import { connect } from 'mini-store';
@@ -138,7 +138,10 @@ export class SubMenu extends React.Component {
 
   onKeyDown = (e) => {
     const keyCode = e.keyCode;
-    const menu = this.menuRef.current.wrappedInstance;
+    const menu = (
+        this.subPopupMenuRef.current &&
+        this.subPopupMenuRef.current.wrappedInstance
+      ) || this.menuRef.current;
     const {
       isOpen,
       store,
@@ -390,7 +393,7 @@ export class SubMenu extends React.Component {
     const animProps = {};
 
     if (baseProps.openTransitionName) {
-      animProps.transitionName = baseProps.openTransitionName;
+      animProps.transitionname = baseProps.openTransitionName;
     } else if (typeof baseProps.openAnimation === 'object') {
       animProps.animation = { ...baseProps.openAnimation };
       if (!transitionAppear) {
@@ -401,11 +404,11 @@ export class SubMenu extends React.Component {
     return (
       <CSSTransition
         {...animProps}
-        transitionName="enter"
-        transitionAppear={transitionAppear}
-        transitionAppearTimeout={200}
-        transitionEnterTimeout={200}
-        transitionLeaveTimeout={200}
+        transitionappear={transitionAppear}
+        transitionappeartimeout={200}
+        transitionentertimeout={200}
+        transitionleavetimeout={200}
+        timeout={200}
       >
         <SubPopupMenu
           ref={this.subPopupMenuRef}
